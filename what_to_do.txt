@@ -48,7 +48,7 @@ GET    /teachers/:id/grades
 GET    /teachers/:id/assignments
 GET    /teachers/:id/clubs-managed
 
-Admin & Librarian
+Admin & Librarian(DONE)
 GET    /admins
 GET    /admins/:id
 PATCH  /admins/:id
