@@ -147,7 +147,7 @@ POST   /fee-transactions
 GET    /fee-transactions/by-record/:feeRecordId
 //
 
-Books
+Books(DONE)
 GET    /books
 GET    /books/:id
 POST   /books
@@ -156,9 +156,9 @@ DELETE /books/:id
 
 GET    /books/search?title=...&author=...&category=...
 
+//
 
-
-Borrow Records
+Borrow Records(DONE)
 
 POST   /borrows                   // Issue book
 PATCH  /borrows/:id               // Return book / update status
@@ -166,8 +166,9 @@ GET    /borrows
 GET    /borrows/by-student/:studentId
 GET    /borrows/by-book/:bookId
 
+//
 
- Club Management
+ Club Management(DONE)
 
  GET    /clubs
 GET    /clubs/:id
@@ -178,6 +179,7 @@ DELETE /clubs/:id
 GET    /clubs/:id/members
 GET    /clubs/:id/events
 GET    /clubs/:id/budgets
+//
 
 Club Memberships
 
@@ -253,5 +255,5 @@ PATCH  /hostel-allocations/:id    // Vacate
 GET    /hostel-allocations/by-student/:studentId
 
 
-
+Middleware for all routes 
 
