@@ -201,8 +201,8 @@ DELETE /events/:id
 GET    /events/by-club/:clubId
 GET    /events/upcoming
 
-
-Event Participation
+//
+Event Participation(DONE)
 
 
 POST   /event-participations      // Register for event
@@ -211,14 +211,12 @@ GET    /event-participations/by-event/:eventId
 GET    /event-participations/by-student/:studentId
 
 
-
-Club Budgets
-
-
+//
+Club Budgets(DONE)
 GET    /club-budgets
 POST   /club-budgets
 GET    /club-budgets/by-club/:clubId
-
+//
 Leave Management
 GET    /leave-applications
 POST   /leave-applications        // Student applies
