@@ -1,5 +1,5 @@
 // src/controllers/course.controller.js
-import { PrismaClient } from '@prisma/client';
+const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
@@ -11,7 +11,7 @@ const canManageCourse = (req, courseTeacherId) => {
   );
 };
 
-export const getAllCourses = async (req, res) => {
+const getAllCourses = async (req, res) => {
   try {
     const { semester, departmentId, teacherId } = req.query;
     const where = {};
@@ -33,18 +33,18 @@ export const getAllCourses = async (req, res) => {
   }
 };
 
-export const createCourse = async (req, res) => {
+const createCourse = async (req, res) => {
   const { name, code, credits, description, semester, year, departmentId, teacherId } = req.body;
 
   try {
-    // Validate relations exist
     const dept = await prisma.department.findUnique({ where: { id: departmentId } });
     const teacher = await prisma.teacher.findUnique({ where: { id: teacherId } });
+
     if (!dept) return res.status(400).json({ error: 'Department not found' });
     if (!teacher) return res.status(400).json({ error: 'Teacher not found' });
 
     const course = await prisma.course.create({
-       {
+      data: {
         name,
         code,
         credits,
@@ -55,6 +55,7 @@ export const createCourse = async (req, res) => {
         teacherId,
       },
     });
+
     res.status(201).json(course);
   } catch (err) {
     if (err.code === 'P2002') {
@@ -67,15 +68,12 @@ export const createCourse = async (req, res) => {
   }
 };
 
-export const getCourseById = async (req, res) => {
+const getCourseById = async (req, res) => {
   const { id } = req.params;
   try {
     const course = await prisma.course.findUnique({
       where: { id },
-      include: {
-        department: true,
-        teacher: true,
-      },
+      include: { department: true, teacher: true },
     });
     if (!course) return res.status(404).json({ error: 'Course not found' });
     res.json(course);
@@ -84,7 +82,7 @@ export const getCourseById = async (req, res) => {
   }
 };
 
-export const updateCourse = async (req, res) => {
+const updateCourse = async (req, res) => {
   const { id } = req.params;
   const updateData = req.body;
 
@@ -98,8 +96,9 @@ export const updateCourse = async (req, res) => {
 
     const updated = await prisma.course.update({
       where: { id },
-       updateData,
+      data: updateData,
     });
+
     res.json(updated);
   } catch (err) {
     if (err.code === 'P2002') {
@@ -109,7 +108,7 @@ export const updateCourse = async (req, res) => {
   }
 };
 
-export const deleteCourse = async (req, res) => {
+const deleteCourse = async (req, res) => {
   const { id } = req.params;
   try {
     await prisma.course.delete({ where: { id } });
@@ -124,7 +123,7 @@ export const deleteCourse = async (req, res) => {
 
 // --- Relation Endpoints ---
 
-export const getEnrollments = async (req, res) => {
+const getEnrollments = async (req, res) => {
   const { id } = req.params;
   const enrollments = await prisma.enrollment.findMany({
     where: { courseId: id },
@@ -133,7 +132,7 @@ export const getEnrollments = async (req, res) => {
   res.json(enrollments);
 };
 
-export const getAttendances = async (req, res) => {
+const getAttendances = async (req, res) => {
   const { id } = req.params;
   const attendances = await prisma.attendance.findMany({
     where: { courseId: id },
@@ -142,7 +141,7 @@ export const getAttendances = async (req, res) => {
   res.json(attendances);
 };
 
-export const getGrades = async (req, res) => {
+const getGrades = async (req, res) => {
   const { id } = req.params;
   const grades = await prisma.grade.findMany({
     where: { courseId: id },
@@ -151,7 +150,7 @@ export const getGrades = async (req, res) => {
   res.json(grades);
 };
 
-export const getAssignments = async (req, res) => {
+const getAssignments = async (req, res) => {
   const { id } = req.params;
   const assignments = await prisma.assignment.findMany({
     where: { courseId: id },
@@ -160,10 +159,23 @@ export const getAssignments = async (req, res) => {
   res.json(assignments);
 };
 
-export const getTimetable = async (req, res) => {
+const getTimetable = async (req, res) => {
   const { id } = req.params;
   const timetable = await prisma.timetable.findMany({
     where: { courseId: id },
   });
   res.json(timetable);
+};
+
+module.exports = {
+  getAllCourses,
+  createCourse,
+  getCourseById,
+  updateCourse,
+  deleteCourse,
+  getEnrollments,
+  getAttendances,
+  getGrades,
+  getAssignments,
+  getTimetable,
 };
