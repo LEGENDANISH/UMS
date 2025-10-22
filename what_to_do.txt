@@ -181,7 +181,7 @@ GET    /clubs/:id/events
 GET    /clubs/:id/budgets
 //
 
-Club Memberships
+Club Memberships(DONE)
 
 POST   /club-memberships          // Join club
 PATCH  /club-memberships/:id      // Update role/status
@@ -191,7 +191,7 @@ GET    /students/:id/clubs
 
 
 
-Events
+Events(DONE)
 GET    /events
 GET    /events/:id
 POST   /events

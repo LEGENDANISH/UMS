@@ -3,20 +3,18 @@ import prisma from '../prisma/client.js';
 // GET /events
 export const getEvents = async (req, res) => {
   try {
-    const { page, limit, status, search } = req.query;
+    const { page = 1, limit = 10, status, search } = req.query;
     const skip = (page - 1) * limit;
 
     const where = {};
     if (status) where.status = status;
-    if (search) {
-      where.title = { contains: search, mode: 'insensitive' };
-    }
+    if (search) where.title = { contains: search, mode: 'insensitive' };
 
     const [events, total] = await Promise.all([
       prisma.event.findMany({
         where,
-        skip,
-        take: limit,
+        skip: Number(skip),
+        take: Number(limit),
         orderBy: { eventDate: 'desc' },
         include: { club: { select: { id: true, name: true } } },
       }),
@@ -81,12 +79,9 @@ export const createEvent = async (req, res) => {
     // Validate clubId if provided
     if (clubId) {
       const club = await prisma.club.findUnique({ where: { id: clubId } });
-      if (!club) {
-        return res.status(400).json({ error: 'Invalid clubId: club not found' });
-      }
+      if (!club) return res.status(400).json({ error: 'Invalid clubId: club not found' });
     }
 
-    // Ensure registration deadline is before event date
     if (registrationDeadline && new Date(registrationDeadline) >= new Date(eventDate)) {
       return res.status(400).json({
         error: 'Registration deadline must be before the event date',
@@ -94,7 +89,7 @@ export const createEvent = async (req, res) => {
     }
 
     const event = await prisma.event.create({
-       {
+      data: { // <-- fixed
         title,
         description: description || null,
         clubId: clubId || null,
@@ -123,33 +118,21 @@ export const updateEvent = async (req, res) => {
     const data = { ...req.body };
 
     // Validate clubId if provided
-    if (data.clubId !== undefined) {
-      if (data.clubId === null) {
-        // OK: remove club association
-      } else {
-        const club = await prisma.club.findUnique({ where: { id: data.clubId } });
-        if (!club) {
-          return res.status(400).json({ error: 'Invalid clubId' });
-        }
-      }
+    if (data.clubId !== undefined && data.clubId !== null) {
+      const club = await prisma.club.findUnique({ where: { id: data.clubId } });
+      if (!club) return res.status(400).json({ error: 'Invalid clubId' });
     }
 
     // Handle optional nulls
-    if (data.description === undefined) delete data.description;
-    else data.description = data.description || null;
-
-    if (data.venue === undefined) delete data.venue;
-    else data.venue = data.venue || null;
-
-    if (data.banner === undefined) delete data.banner;
-    else data.banner = data.banner || null;
-
+    data.description = data.description === undefined ? undefined : data.description || null;
+    data.venue = data.venue === undefined ? undefined : data.venue || null;
+    data.banner = data.banner === undefined ? undefined : data.banner || null;
     if (data.maxParticipants === undefined) delete data.maxParticipants;
     if (data.registrationDeadline === undefined) delete data.registrationDeadline;
 
     const event = await prisma.event.update({
       where: { id },
-       data,
+      data, // <-- fixed
     });
 
     res.json(event);
@@ -165,7 +148,6 @@ export const deleteEvent = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Optional: prevent deletion if participants exist
     const participationCount = await prisma.eventParticipation.count({
       where: { eventId: id },
     });
@@ -189,7 +171,6 @@ export const deleteEvent = async (req, res) => {
 export const getEventsByClub = async (req, res) => {
   try {
     const { clubId } = req.params;
-
     const club = await prisma.club.findUnique({ where: { id: clubId } });
     if (!club) return res.status(404).json({ error: 'Club not found' });
 
@@ -211,10 +192,7 @@ export const getUpcomingEvents = async (req, res) => {
     const now = new Date();
 
     const events = await prisma.event.findMany({
-      where: {
-        status: 'UPCOMING',
-        eventDate: { gte: now },
-      },
+      where: { status: 'UPCOMING', eventDate: { gte: now } },
       orderBy: { eventDate: 'asc' },
       include: { club: { select: { name: true } } },
     });
