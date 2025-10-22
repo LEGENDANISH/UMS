@@ -123,8 +123,8 @@ model Student {
   // Academic Info
   rollNumber      String    @unique
   admissionDate   DateTime
-  departmentId    String
-  department      Department @relation(fields: [departmentId], references: [id])
+  departmentId    String?
+department   Department? @relation(fields: [departmentId], references: [id])
   currentSemester Int
   currentYear     Int
   cgpa            Float?    @default(0)

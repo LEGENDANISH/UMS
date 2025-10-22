@@ -1,9 +1,8 @@
-const express = require("express");
-const app = express();
+// src/server.js
+import app from './app.js';
 
-const { PrismaClient } = require('@prisma/client')
-const prisma = new PrismaClient()
+const PORT = process.env.PORT || 3000;
 
-app.listen(3000,()=>{
-    console.log("server is on")
-})
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
