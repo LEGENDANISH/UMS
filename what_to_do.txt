@@ -35,7 +35,7 @@ GET    /students/:id/assignments
 
 
 
- Teacher Management
+ Teacher Management(DONE)
  GET    /teachers
 GET    /teachers/:id
 POST   /teachers
