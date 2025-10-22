@@ -35,7 +35,7 @@ export const createFeeRecord = async (req, res) => {
     if (!student) return res.status(400).json({ error: 'Student not found' });
 
     const record = await prisma.feeRecord.create({
-       {
+      data: { // <-- fixed
         studentId,
         semester,
         year,
@@ -80,7 +80,7 @@ export const updateFeeRecord = async (req, res) => {
   try {
     const updated = await prisma.feeRecord.update({
       where: { id },
-       {
+      data: { // <-- fixed
         totalAmount,
         dueDate: dueDate ? new Date(dueDate) : undefined,
         status,
@@ -120,7 +120,7 @@ export const createFeeTransaction = async (req, res) => {
     }
 
     const transaction = await prisma.feeTransaction.create({
-       {
+      data: { // <-- fixed
         feeRecordId,
         amount,
         paymentMethod,
@@ -141,7 +141,7 @@ export const createFeeTransaction = async (req, res) => {
 
     await prisma.feeRecord.update({
       where: { id: feeRecordId },
-       { amountPaid: newAmountPaid, status: newStatus },
+      data: { amountPaid: newAmountPaid, status: newStatus }, // <-- fixed
     });
 
     res.status(201).json(transaction);
