@@ -217,7 +217,7 @@ GET    /club-budgets
 POST   /club-budgets
 GET    /club-budgets/by-club/:clubId
 //
-Leave Management
+Leave Management(DONE)
 GET    /leave-applications
 POST   /leave-applications        // Student applies
 PATCH  /leave-applications/:id    // Admin/teacher reviews
@@ -226,15 +226,15 @@ DELETE /leave-applications/:id
 GET    /leave-applications/by-student/:studentId
 GET    /leave-applications/pending
 
-
-Notifications
+//
+Notifications(DONE)
 GET    /notifications
 GET    /notifications/:id
 PATCH  /notifications/:id         // Mark as read
 DELETE /notifications/:id
 
 POST   /notifications/broadcast   // Admin sends to many
-
+//
 
 Audit Logs
 GET    /audit-logs
@@ -254,4 +254,4 @@ GET    /hostel-allocations/by-student/:studentId
 
 
 Middleware for all routes 
-
+role wise 
