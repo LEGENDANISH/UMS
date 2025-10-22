@@ -68,7 +68,7 @@ PATCH  /departments/:id
 DELETE /departments/:id
 
 
-courses
+courses(DONE)
 GET    /courses
 GET    /courses/:id
 POST   /courses
@@ -126,7 +126,7 @@ GET    /submissions/by-assignment/:assignmentId
 //
 
 
-Timetable
+Timetable(DONE)
 GET    /timetables
 POST   /timetables
 PATCH  /timetables/:id
@@ -136,7 +136,7 @@ GET    /timetables/by-course/:courseId
 GET    /timetables/by-day/:dayOfWeek   // 0–6
 
 //
-Fee Management
+Fee Management(DONE)
 GET    /fee-records
 GET    /fee-records/:id
 POST   /fee-records
@@ -145,7 +145,7 @@ PATCH  /fee-records/:id
 GET    /students/:id/fee-records
 POST   /fee-transactions
 GET    /fee-transactions/by-record/:feeRecordId
-
+//
 
 Books
 GET    /books
