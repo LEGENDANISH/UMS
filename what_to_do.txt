@@ -60,7 +60,7 @@ PATCH  /librarians/:id
 
 Academic Structure
 
-
+//(DONE)
 GET    /departments
 GET    /departments/:id
 POST   /departments
@@ -80,23 +80,26 @@ GET    /courses/:id/attendances
 GET    /courses/:id/grades
 GET    /courses/:id/assignments
 GET    /courses/:id/timetable
+//
 
-Enrollments
+
+Enrollments(DONE)
 GET    /enrollments
 POST   /enrollments               // Enroll student in course
 DELETE /enrollments/:id           // Unenroll
 
 
 
-Attendance
+Attendance(DONE)
 GET    /attendances
 POST   /attendances               // Mark attendance
 PATCH  /attendances/:id           // Update status
 GET    /attendances/by-course/:courseId
 GET    /attendances/by-student/:studentId
 
+//
 
-Grades & Assessments
+Grades & Assessments(DONE)
 GET    /grades
 POST   /grades
 PATCH  /grades/:id
@@ -105,22 +108,22 @@ GET    /grades/by-course/:courseId
 
 
 
-Assignments
+Assignments(DONE)
 GET    /assignments
 POST   /assignments
 PATCH  /assignments/:id
 DELETE /assignments/:id
 
 GET    /assignments/:id/submissions
+//
 
-
-Assignment Submissions
-
-
+Assignment Submissions(DONE)
 POST   /submissions               // Student submits
 PATCH  /submissions/:id           // Teacher grades
 GET    /submissions/by-student/:studentId
 GET    /submissions/by-assignment/:assignmentId
+
+//
 
 
 Timetable
@@ -132,7 +135,7 @@ DELETE /timetables/:id
 GET    /timetables/by-course/:courseId
 GET    /timetables/by-day/:dayOfWeek   // 0–6
 
-
+//
 Fee Management
 GET    /fee-records
 GET    /fee-records/:id
