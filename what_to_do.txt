@@ -1,0 +1,301 @@
+routes
+//
+department thing is optional currently for student
+//
+ Authentication & User Management (DONE)
+POST   /auth/register
+POST   /auth/login
+POST   /auth/logout
+GET    /auth/me
+PATCH  /auth/change-password
+
+GET    /users
+GET    /users/:id
+PATCH  /users/:id
+DELETE /users/:id
+
+
+Student Management(DONE)
+
+GET    /students
+GET    /students/:id
+POST   /students
+PATCH  /students/:id
+DELETE /students/:id
+
+GET    /students/:id/enrollments
+GET    /students/:id/attendances
+GET    /students/:id/grades
+GET    /students/:id/fee-records
+GET    /students/:id/borrow-records
+GET    /students/:id/club-memberships
+GET    /students/:id/leave-applications
+GET    /students/:id/assignments
+
+
+
+
+ Teacher Management(DONE)
+ GET    /teachers
+GET    /teachers/:id
+POST   /teachers
+PATCH  /teachers/:id
+DELETE /teachers/:id
+
+GET    /teachers/:id/courses
+GET    /teachers/:id/attendances
+GET    /teachers/:id/grades
+GET    /teachers/:id/assignments
+GET    /teachers/:id/clubs-managed
+
+Admin & Librarian(DONE)
+GET    /admins
+GET    /admins/:id
+PATCH  /admins/:id
+
+GET    /librarians
+GET    /librarians/:id
+PATCH  /librarians/:id
+
+
+Academic Structure
+
+//(DONE)
+GET    /departments
+GET    /departments/:id
+POST   /departments
+PATCH  /departments/:id
+DELETE /departments/:id
+
+
+courses(DONE)
+GET    /courses
+GET    /courses/:id
+POST   /courses
+PATCH  /courses/:id
+DELETE /courses/:id
+
+GET    /courses/:id/enrollments
+GET    /courses/:id/attendances
+GET    /courses/:id/grades
+GET    /courses/:id/assignments
+GET    /courses/:id/timetable
+//
+
+
+Enrollments(DONE)
+GET    /enrollments
+POST   /enrollments               // Enroll student in course
+DELETE /enrollments/:id           // Unenroll
+
+
+
+Attendance(DONE)
+GET    /attendances
+POST   /attendances               // Mark attendance
+PATCH  /attendances/:id           // Update status
+GET    /attendances/by-course/:courseId
+GET    /attendances/by-student/:studentId
+
+//
+
+Grades & Assessments(DONE)
+GET    /grades
+POST   /grades
+PATCH  /grades/:id
+GET    /grades/by-student/:studentId
+GET    /grades/by-course/:courseId
+
+
+
+Assignments(DONE)
+GET    /assignments
+POST   /assignments
+PATCH  /assignments/:id
+DELETE /assignments/:id
+
+GET    /assignments/:id/submissions
+//
+
+Assignment Submissions(DONE)
+POST   /submissions               // Student submits
+PATCH  /submissions/:id           // Teacher grades
+GET    /submissions/by-student/:studentId
+GET    /submissions/by-assignment/:assignmentId
+
+//
+
+
+Timetable(DONE)
+GET    /timetables
+POST   /timetables
+PATCH  /timetables/:id
+DELETE /timetables/:id
+
+GET    /timetables/by-course/:courseId
+GET    /timetables/by-day/:dayOfWeek   // 0–6
+
+//
+Fee Management(DONE)
+GET    /fee-records
+GET    /fee-records/:id
+POST   /fee-records
+PATCH  /fee-records/:id
+
+GET    /students/:id/fee-records
+POST   /fee-transactions
+GET    /fee-transactions/by-record/:feeRecordId
+//
+
+Books(DONE)
+GET    /books
+GET    /books/:id
+POST   /books
+PATCH  /books/:id
+DELETE /books/:id
+
+GET    /books/search?title=...&author=...&category=...
+
+//
+
+Borrow Records(DONE)
+
+POST   /borrows                   // Issue book
+PATCH  /borrows/:id               // Return book / update status
+GET    /borrows
+GET    /borrows/by-student/:studentId
+GET    /borrows/by-book/:bookId
+
+//
+
+ Club Management(DONE)
+
+ GET    /clubs
+GET    /clubs/:id
+POST   /clubs
+PATCH  /clubs/:id
+DELETE /clubs/:id
+
+GET    /clubs/:id/members
+GET    /clubs/:id/events
+GET    /clubs/:id/budgets
+//
+
+Club Memberships(DONE)
+
+POST   /club-memberships          // Join club
+PATCH  /club-memberships/:id      // Update role/status
+DELETE /club-memberships/:id
+
+GET    /students/:id/clubs
+
+
+
+Events(DONE)
+GET    /events
+GET    /events/:id
+POST   /events
+PATCH  /events/:id
+DELETE /events/:id
+
+GET    /events/by-club/:clubId
+GET    /events/upcoming
+
+//
+Event Participation(DONE)
+
+
+POST   /event-participations      // Register for event
+PATCH  /event-participations/:id  // Mark as attended
+GET    /event-participations/by-event/:eventId
+GET    /event-participations/by-student/:studentId
+
+
+//
+Club Budgets(DONE)
+GET    /club-budgets
+POST   /club-budgets
+GET    /club-budgets/by-club/:clubId
+//
+Leave Management(DONE)
+GET    /leave-applications
+POST   /leave-applications        // Student applies
+PATCH  /leave-applications/:id    // Admin/teacher reviews
+DELETE /leave-applications/:id
+
+GET    /leave-applications/by-student/:studentId
+GET    /leave-applications/pending
+
+//
+Notifications(DONE)
+GET    /notifications
+GET    /notifications/:id
+PATCH  /notifications/:id         // Mark as read
+DELETE /notifications/:id
+
+POST   /notifications/broadcast   // Admin sends to many
+//
+
+Audit Logs
+GET    /audit-logs
+GET    /audit-logs/by-user/:userId
+GET    /audit-logs/by-action/:action
+
+
+Hostel Management (Optional)
+GET    /hostels
+GET    /hostels/:id
+POST   /hostels
+GET    /hostels/:id/rooms
+
+POST   /hostel-allocations        // Allocate room
+PATCH  /hostel-allocations/:id    // Vacate
+GET    /hostel-allocations/by-student/:studentId
+
+
+Middleware for all routes 
+role wise 
+
+
+
+
+
+students
+
+GET    /students/:id
+PATCH  /students/:id
+GET    /students/:id/enrollments
+GET    /students/:id/attendances
+GET    /students/:id/grades
+GET    /students/:id/fee-records
+GET    /students/:id/borrow-records
+GET    /students/:id/club-memberships
+GET    /students/:id/leave-applications
+GET    /students/:id/assignments
+GET    /courses/:id
+GET    /courses/:id/timetable
+GET    /courses/:id/assignments
+GET    /courses/:id/grades
+GET    /timetables/by-day/:dayOfWeek
+GET    /timetables/by-course/:courseId
+GET    /attendances/by-course/:courseId
+GET    /grades/by-course/:courseId
+GET    /assignments/:id/submissions
+POST   /submissions
+PATCH  /submissions/:id
+GET    /submissions/by-student/:studentId
+GET    /fee-transactions/by-record/:feeRecordId
+GET    /books
+GET    /books/search?title=...&author=...&category=...
+GET    /students/:id/borrow-records
+GET    /students/:id/club-memberships
+GET    /clubs/:id/events
+GET    /events/upcoming
+GET    /event-participations/by-student/:studentId
+GET    /leave-applications/by-student/:studentId
+POST   /leave-applications
+PATCH  /leave-applications/:id
+GET    /notifications
+PATCH  /notifications/:id
+GET    /hostel-allocations/by-student/:studentId
+GET    /hostels/:id/rooms
