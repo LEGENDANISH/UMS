@@ -14,6 +14,14 @@ app.use(express.json()); // ✅ this line is essential
 // Security & parsing middleware
 app.use(helmet());
 app.use(cors());
+
+app.use(
+  cors({
+    origin: "*", // ✅ allow ALL origins
+    credentials: false, // ⚠️ must be false when using '*'
+  })
+);
+
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 

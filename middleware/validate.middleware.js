@@ -1,4 +1,4 @@
-import { ZodError } from 'zod';
+import * as z from "zod"; // ✅ reliable import
 
 export const validate = (schema) => (req, res, next) => {
   try {
@@ -9,15 +9,26 @@ export const validate = (schema) => (req, res, next) => {
     });
     next();
   } catch (error) {
-    if (error instanceof ZodError) {
+    // ✅ Detect if it's really a ZodError
+    if (error instanceof z.ZodError || error.name === "ZodError") {
+      const details = Array.isArray(error.errors)
+        ? error.errors.map((e) => ({
+            path: e.path ? e.path.join(".") : "(unknown)",
+            message: e.message || "Invalid input",
+          }))
+        : [];
+
       return res.status(400).json({
-        error: 'Validation failed',
-        details: error.errors.map((e) => ({
-          path: e.path.join('.'),
-          message: e.message,
-        })),
+        success: false,
+        error: "Validation failed",
+        details,
       });
     }
-    next(error);
+
+    console.error("Unexpected validation middleware error:", error);
+    res.status(500).json({
+      success: false,
+      error: "Unexpected validation middleware error",
+    });
   }
 };

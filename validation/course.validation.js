@@ -21,14 +21,15 @@ export const createCourseSchema = z.object({
   body: z.object({
     name: z.string().min(1, 'Name is required'),
     code: z.string().min(1, 'Code is required').regex(/^[A-Z0-9\-_]+$/, 'Invalid course code format'),
-    credits: z.number().int().min(1).max(10),
+    credits: z.coerce.number().int().min(1).max(10).optional(),
     description: z.string().optional(),
-    semester: semesterEnum,
-    year: z.number().int().min(2000).max(2100),
-    departmentId: z.string().min(1, 'Department ID is required'),
-    teacherId: z.string().min(1, 'Teacher ID is required'),
+    semester: semesterEnum.optional(),
+    year: z.coerce.number().int().min(2000).max(2100).optional(),
+    departmentId: z.string().min(1, 'Department ID is required').optional(),
+    teacherId: z.string().min(1, 'Teacher ID is required').optional(),
   }),
 });
+
 
 export const updateCourseSchema = z.object({
   params: z.object({

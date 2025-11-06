@@ -1,8 +1,8 @@
 // src/controllers/course.controller.js
 const { PrismaClient } = require('@prisma/client');
-
 const prisma = new PrismaClient();
 
+// Helper function to restrict updates to admins or the course teacher
 const canManageCourse = (req, courseTeacherId) => {
   const user = req.user;
   return (
@@ -11,6 +11,9 @@ const canManageCourse = (req, courseTeacherId) => {
   );
 };
 
+// ------------------------------------------------------
+// GET ALL COURSES
+// ------------------------------------------------------
 const getAllCourses = async (req, res) => {
   try {
     const { semester, departmentId, teacherId } = req.query;
@@ -27,22 +30,22 @@ const getAllCourses = async (req, res) => {
       },
       orderBy: { createdAt: 'desc' },
     });
+
     res.json(courses);
   } catch (err) {
+    console.error('Error fetching courses:', err);
     res.status(500).json({ error: 'Failed to fetch courses' });
   }
 };
 
+// ------------------------------------------------------
+// CREATE COURSE + AUTO-ENROLL STUDENTS
+// ------------------------------------------------------
 const createCourse = async (req, res) => {
   const { name, code, credits, description, semester, year, departmentId, teacherId } = req.body;
 
   try {
-    const dept = await prisma.department.findUnique({ where: { id: departmentId } });
-    const teacher = await prisma.teacher.findUnique({ where: { id: teacherId } });
-
-    if (!dept) return res.status(400).json({ error: 'Department not found' });
-    if (!teacher) return res.status(400).json({ error: 'Teacher not found' });
-
+    // Step 1: Create the new course
     const course = await prisma.course.create({
       data: {
         name,
@@ -56,32 +59,65 @@ const createCourse = async (req, res) => {
       },
     });
 
-    res.status(201).json(course);
+    // Step 2: Find all students in the same department
+    const students = await prisma.student.findMany({
+      where: { departmentId },
+      select: { id: true },
+    });
+
+    // Step 3: Auto-enroll each student in this course
+    if (students.length > 0) {
+      const enrollmentsData = students.map((student) => ({
+        studentId: student.id,
+        courseId: course.id,
+        semester,
+        year,
+      }));
+
+      await prisma.enrollment.createMany({
+        data: enrollmentsData,
+        skipDuplicates: true, // Avoid duplicates
+      });
+    }
+
+    res.status(201).json({
+      success: true,
+      message: `Course created and ${students.length} student(s) auto-enrolled.`,
+      course,
+    });
   } catch (err) {
+    console.error('Error creating course:', err);
     if (err.code === 'P2002') {
       return res.status(400).json({ error: 'Course code already exists' });
-    }
-    if (err.code === 'P2003') {
-      return res.status(400).json({ error: 'Foreign key violation (department/teacher)' });
     }
     res.status(500).json({ error: 'Failed to create course' });
   }
 };
 
+// ------------------------------------------------------
+// GET COURSE BY ID
+// ------------------------------------------------------
 const getCourseById = async (req, res) => {
   const { id } = req.params;
   try {
     const course = await prisma.course.findUnique({
       where: { id },
-      include: { department: true, teacher: true },
+      include: {
+        department: true,
+        teacher: true,
+      },
     });
     if (!course) return res.status(404).json({ error: 'Course not found' });
     res.json(course);
   } catch (err) {
+    console.error('Error fetching course:', err);
     res.status(500).json({ error: 'Failed to fetch course' });
   }
 };
 
+// ------------------------------------------------------
+// UPDATE COURSE
+// ------------------------------------------------------
 const updateCourse = async (req, res) => {
   const { id } = req.params;
   const updateData = req.body;
@@ -108,6 +144,9 @@ const updateCourse = async (req, res) => {
   }
 };
 
+// ------------------------------------------------------
+// DELETE COURSE
+// ------------------------------------------------------
 const deleteCourse = async (req, res) => {
   const { id } = req.params;
   try {
@@ -121,13 +160,18 @@ const deleteCourse = async (req, res) => {
   }
 };
 
-// --- Relation Endpoints ---
-
+// ------------------------------------------------------
+// RELATED DATA FETCHERS
+// ------------------------------------------------------
 const getEnrollments = async (req, res) => {
   const { id } = req.params;
   const enrollments = await prisma.enrollment.findMany({
     where: { courseId: id },
-    include: { student: { include: { user: { select: { email: true } } } } },
+    include: {
+      student: {
+        include: { user: { select: { email: true } } },
+      },
+    },
   });
   res.json(enrollments);
 };
@@ -167,6 +211,9 @@ const getTimetable = async (req, res) => {
   res.json(timetable);
 };
 
+// ------------------------------------------------------
+// EXPORTS
+// ------------------------------------------------------
 module.exports = {
   getAllCourses,
   createCourse,

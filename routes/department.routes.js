@@ -14,7 +14,7 @@ const router = Router();
 
 router.get(
   '/',
-  authenticate,
+  
   deptCtrl.getAllDepartments
 );
 
