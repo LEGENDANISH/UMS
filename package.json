@@ -3,15 +3,16 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest "
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@prisma/client": "^6.17.1",
+    "@prisma/client": "^6.19.0",
     "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "helmet": "^8.1.0",
@@ -20,6 +21,12 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
-    "prisma": "^6.17.1"
+    "@types/jest": "^30.0.0",
+    "jest": "^30.2.0",
+    "patch-package": "^8.0.1",
+    "prisma": "^6.17.1",
+    "supertest": "^7.1.4",
+    "ts-jest": "^29.4.5",
+    "vitest": "^4.0.8"
   }
 }

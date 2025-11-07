@@ -4,14 +4,11 @@ const prisma = new PrismaClient();
 
 // Utility: check if requester can access this teacher
 const canAccessTeacher = (req, teacherUserId) => {
-  const user = req.user;
-  return (
-    user.role === 'ADMIN' ||
-    user.role === 'MANAGEMENT' ||
-    user.id === teacherUserId
-  );
+  const { role, id } = req.user;
+  if (role === 'ADMIN' || role === 'MANAGEMENT') return true;
+  if (role === 'TEACHER' && id === teacherUserId) return true;
+  return false;
 };
-
 // GET /teachers
 const getAllTeachers = async (req, res) => {
   try {

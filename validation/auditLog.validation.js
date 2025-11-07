@@ -1,4 +1,3 @@
-// src/validation/auditLog.validation.js
 import { z } from 'zod';
 
 export const userIdParamSchema = z.object({
